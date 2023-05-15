@@ -1,0 +1,6 @@
+opencv-python==4.6.0.66
+onnxruntime-gpu==1.14.1
+gradio==3.30.0
+fastapi==0.95.1
+uvicorn==0.22.0
+python-multipart

@@ -1,0 +1,8 @@
+# path to the dataset
+path:
+train: 'images/train'
+val: 'images/val'
+
+# Classes details
+nc: 5
+names: ['chicken_curry', 'chocolate_cake', 'hamburger', 'pizza', 'ramen']
