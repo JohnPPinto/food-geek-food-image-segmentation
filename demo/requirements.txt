@@ -1,3 +1,6 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:e85d6ea39ecfa8b388bfa1be1adfa80f8611d48d45a5cae0bce3bdcb3343f316
-size 121
+opencv-python-headless==4.7.0.72
+onnxruntime-gpu==1.14.1
+gradio==3.30.0
+fastapi==0.95.1
+uvicorn==0.22.0
+python-multipart
