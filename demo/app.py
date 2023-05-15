@@ -141,7 +141,7 @@ with gr.Blocks(theme=gr.themes.Soft()) as demo:
     food_info_box = gr.Textbox(label='Food Info')
     
     # Footer
-    gr.Markdown('Made by John - [Github Link]()')
+    gr.Markdown('Made by John - [Github Link](https://github.com/JohnPPinto/food-geek-food-image-segmentation)')
     
     # On selected event
     btn_submit.click(fn=gradio_predict, inputs=input, outputs=output)
