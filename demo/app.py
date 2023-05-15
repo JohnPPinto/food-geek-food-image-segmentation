@@ -9,6 +9,7 @@ import uvicorn
 from fastapi import FastAPI, File, UploadFile
 from starlette.responses import Response
 from predict import predict
+from food_info import fds_food_info
 
 model_path = 'models/yolov8s-seg-v1.onnx'
 
@@ -107,7 +108,8 @@ def gradio_predict(img):
 
 # Creating a function when segment is selected
 def on_annot_select(evt: gr.SelectData):
-    return f'Selected Food: {evt.value}'
+    info = fds_food_info(evt.value)
+    return info
 
 # Creating a function to clear all data
 def on_clear_btn():
@@ -148,3 +150,6 @@ with gr.Blocks(theme=gr.themes.Soft()) as demo:
 
 # Mounding the gradio app on to the fastAPI app
 app = gr.mount_gradio_app(app=app, blocks=demo, path='/')
+
+if __name__ == '__main__':
+    uvicorn.run('app:app')
