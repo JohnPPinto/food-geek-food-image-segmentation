@@ -1,8 +1,12 @@
+from dotenv import load_dotenv
 from requests.auth import HTTPBasicAuth
 import requests
 import json
 import os
-import config
+
+# loading env
+load_dotenv()
+API_KEY = os.getenv('API_KEY')
 
 # Matching classes with FDC ID
 food_list_id = {'chicken curry': '2341861', 
@@ -22,11 +26,10 @@ def fds_food_info(food_name: str):
     """
     url = 'https://api.nal.usda.gov/fdc/v1/food'
     fdc_id = food_list_id[food_name]
-    api_key = config.api_key
 
     response = requests.get(url + '/' + fdc_id, 
                             headers={'Accept': 'application/json'}, 
-                            auth=HTTPBasicAuth(api_key, ''))
+                            auth=HTTPBasicAuth(API_KEY, ''))
     
     obj = json.loads(response.text) if response.status_code == 200 else None
 
