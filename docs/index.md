@@ -1,15 +1,15 @@
 ---
-date: 2023-05-15
+date: 2023-06-01
 ---
 
-May 15, 2023
+June 1, 2023
 # **How I Created a Food Segmentation Web App - Food Geek**
 
 This project is a demonstration of my ability to work in the field of Deep Learning, showcase my skills to learn quickly and develop and deploy end-to-end Artificial Intelligence technologies. Currently, this project is still in work in progress phase, the project has completed the first stage of deployment and will be moving toward the continuous training (CT) stage, where I will be going back to the data pipeline and iterating improvements to all of the pipelines.
 
 ## **The Challenge**
 
-This project creates a web application for different types of food, the web app is capable to understand the foods by using a neural network architecture. Once the web app identifies the food with the help of the neural network it will display all the nutrients present in that food.
+This project creates a web application for different types of food, the web app is capable of understanding the foods by using a neural network architecture. Once the web app identifies the food with the help of the neural network it will display all the nutrients present in that food.
 
 This is a simple implementation of a classification problem, where deep learning is really good at solving it, but there's a catch to this, assume a user eats only one food and uses the web app then the image classification problem will be a straightforward method. But this is not the case for everyone, some might click a photo containing 2 or more foods on a plate or a wide-view photo of the dining table or a buffet with multiple different foods.
 
@@ -60,7 +60,7 @@ I like to create a function that can convert the mask image into a YOLO text fil
 
 * **Line: 6:** Now that the image is read and we have some metadata, we will get the polygon shape using the ```cv2.findContours``` function, this function uses ```CHAIN_APPROX_SIMPLE`` to get the minimum coordinates but important ones which helps in the compute size and time.
 
-* **Line: 8-16:** Now that we have got the coordinates for all the points of the polygon, we need to normalize the values between 0 and 1. Contours provide a tuple within that all the point's x and y coordinates are present in a list, I then divide them with height and width and append them in the list in the format of [x1, y1, x2, y2, ...]
+* **Line: 8-16:** Now that we have the coordinates for all the points of the polygon, we need to normalize the values between 0 and 1. Contours provide a tuple within which all the point's x and y coordinates are present in a list, I then divide them with height and width and append them in the list in the format of [x1, y1, x2, y2, ...]
 
 * **Line: 18-31:** Getting the index of the class from the file path directory and creating a file where I add the values in the Yolo format, starting with the class index and then adding all the normalized coordinates in that one line, in Yolo format one object can have only one line.
 
@@ -102,7 +102,7 @@ def mask_to_yolo(src_filepath: str, dst_filepath: str, class_list: list, verbose
     if verbose == 1:
         print(f'[INFO] Mask file is been converted into Yolo format: "{dst_filepath}".')
 ```
-Now, we have the function to create an annotation file, it's time to pass it to all the mask files and create a text file for that mask polygon. I get the full path for the mask file and create a path with the same name changing the extension to .txt for a text file.
+Now that we have the function to create an annotation file, it's time to pass it to all the mask files and create a text file for that mask polygon. I get the full path for the mask file and create a path with the same name changing the extension to .txt for a text file.
 
 ``` py linenums="1" hl_lines="5 13 14 15 16 17" 
 def create_yolo_labels(src_root_dir: str, dst_root_dir: str, class_list: list, verbose: int = 0):
@@ -195,7 +195,7 @@ You can find the complete code over [here](https://github.com/JohnPPinto/food-ge
 
 ## **Model Pipeline**
 
-Now comes the fun part, building a model that is capable to segment food images. Since I'm dealing with a classification problem along with instance segmentation and a reason to learn something new in computer vision, I will be using one of the current state-of-the-art models called YOLOv8 which is provided by Ultralytics. Similar to the previous generation of YOLO models, the configuration is similar but additional smartness is added to all the tasks and modes. You can check the whole documentation on their [website](https://docs.ultralytics.com/) for quick reference.
+Now comes the fun part, building a model that is capable of segmenting food images. Since I'm dealing with a classification problem along with instance segmentation and a reason to learn something new in computer vision, I will be using one of the current state-of-the-art models called YOLOv8 which is provided by Ultralytics. Similar to the previous generation of YOLO models, the configuration is similar but additional smartness is added to all the tasks and modes. You can check the whole documentation on their [website](https://docs.ultralytics.com/) for quick reference.
 
 Similar to the previous generation YOLO expects datasets to be in the following structure:
 
@@ -206,7 +206,7 @@ Similar to the previous generation YOLO expects datasets to be in the following 
 
 ### **Model Training**
 
-In my model training stage, my goal was to obtain a model that is powerful and lightweight and initially get a model as a baseline to work with, my goal was not to spend a lot of time in model experiments. So everything was dependent on the baseline model. Once the baseline model was successful, I can come back and improve the model. 
+In my model training stage, my goal was to obtain a model that is powerful and lightweight and initially get a model as a baseline to work with, my goal was not to spend a lot of time in model experiments. So everything was dependent on the baseline model. Once the baseline model is successful, I can come back and improve the model. 
 
 To make this possible, I selected three sizes of the YOLOv8 model for the baseline experiments: Nano, Small, and Medium models. As the name states so does the size of the model. For monitoring the model training performance yolo provides tensorboard and Weights and biases, along with this I used ClearML, which does not need much user input and tracks the model automatically.
 
@@ -277,14 +277,14 @@ model = YOLO('train_logs_5class_10percent/exp1_yolov8n_5class_10percent/weights/
 metrics = model.val(name='exp1_best_model') # Run the validation mode
 ```
 
-In Yolo visualizing the images are simple, once you get the result or the prediction for the images you can use the plot method provided by Yolo to visualize the predicted output.
+In Yolo visualizing the images is simple, once you get the result or the prediction for the images you can use the plot method provided by Yolo to visualize the predicted output.
 
 ``` py linenums="1" hl_lines="20 21 22 23 24"
 def predict_and_visualize(model_path: str, test_dirpath: str, conf: float):
     # Getting the list of all the images in the directory
     imgs_list = glob.glob(os.path.join(test_dirpath, '*/*'))
     
-    # Getting a random sample from the images list
+    # Getting a random sample from the image list
     rand_imgs = random.sample(imgs_list, 10)
     
     # Loading the model
@@ -306,7 +306,7 @@ def predict_and_visualize(model_path: str, test_dirpath: str, conf: float):
         plt.axis(False);
 ```
 
-Once all the evaluation is done and the model that is been selected for further process needs to be exported. Now, Yolo mentions in their documentation that they have multiple ways to export the model and all of this depends on the different criteria like on which system the model will run on eg. web application, mobile application, etc, and the device type is will run on CPU or GPU and many more.
+Once all the evaluation is done, the model that is been selected for further process needs to be exported. Now, Yolo has mentioned in their documentation that they have multiple ways to export the model and all of this depends on the different criteria like on which system the model will run on eg. web application, mobile application, etc, and the device type in which it will run on whether CPU or GPU and many more.
 
 In our case, I selected the ONNX format, which is capable of interoperability this means that the model is kind of universal in the AI world.
 
@@ -326,7 +326,7 @@ You can find the complete code for model evaluation over [here](https://github.c
 
 I'm not gonna lie, this was the scariest part of the whole project. Getting the data and model was something that I have been doing for some time, this pipeline is sort of like an adventure in the unknown. Starting this pipeline I had the model in the ONNX format, a format that I have never used and it's a new technology that has less information on the web, so I started to read the docs and learn new things.
 
-In the deployment pipeline, my goal is straightforward, getting the model to work, the user gives an input (images of food) and the model does the prediction on the images which is returned as an output. Once the model was ready, the next was to build a web app that can let a user interact with it.
+In the deployment pipeline, my goal is straightforward, getting the model to work, the user gives an input (images of food) and the model does the prediction on the images which is returned as an output. Once the model was ready, the next was to build a web app that could let a user interact with it.
 
 ### **Adapting to ONNX**
 
@@ -359,7 +359,7 @@ class YoloSegPredict:
         self.get_output_details()
     
     def get_meta_details(self):
-        # Getting the model meta data.
+        # Getting the model metadata.
         model_meta = self.ort_session.get_modelmeta()
         self.class_dict = eval(model_meta.custom_metadata_map['names'])
         self.class_list = list(self.class_dict.values())
@@ -386,7 +386,7 @@ Now, that we have the model ready for action, we will need an image as an input 
         return self.segment_objects(image)
     
     def segment_objects(self, image):
-        # Prepare the image array as a input tensor.
+        # Prepare the image array as an input tensor.
         input_tensor, self.input_img_resized = self.prepare_input(image)
         
         # Perform inference on the image
@@ -437,7 +437,7 @@ Once we get the prediction result, we move forward, toward extracting and proces
 
     The 32 different images come from the convolution layer having 32 filters. You can check this in the above image of Yolo Architecture.
 
-Now, that we know everything about the outputs, it's time to extract the one that has the best prediction. Starting with the box prediction. I extract the classes, boxes, and mask values based on the highest confidence score. Once the boxes are extracted they are processed into the non maximum suppression algorithm, which gives only the best predicted box coordinates rest of the boxes are suppressed.
+Now, that we know everything about the outputs, it's time to extract the one that has the best prediction. Starting with the box prediction. I extract the classes, boxes, and mask values based on the highest confidence score. Once the boxes are extracted they are processed into the non-maximum suppression algorithm, which gives only the best predicted box coordinates rest of the boxes are suppressed.
 
 === "engine.py"
 
@@ -848,7 +848,7 @@ Now that, we have all the predictions, both the bounding box and the mask it's t
         return mask_image
     ```
 
-This way we have both all the prediction data and the processed images with the result applied to them. Finally, we can conclude with the ONNX format and uses it with the web app that we will be going through after this.
+This way we have both all the prediction data and the processed images with the result applied to them. Finally, we can conclude with the ONNX format and use it with the web app that we will be going through after this.
 
 You can find the complete code for engine.py over [here](https://github.com/JohnPPinto/food-geek-food-image-segmentation/blob/main/module/engine.py) and for utils.py over [here](https://github.com/JohnPPinto/food-geek-food-image-segmentation/blob/main/module/utils.py)
 
@@ -860,7 +860,7 @@ We have everything ready at this time, now we need an API and web app that does 
 
 * Similar to the above steps a new post method is been created called predict-to-image, here the input image is taken and processed after that the predicted image is been converted into bytes format, and the buffer is read as a PNG format file to display the image.
 
-* Once the FastAPI app is been created, I then create the gradio app, for the gradio app there are total of three functions:
+* Once the FastAPI app is been created, I then create the gradio app, for the gradio app there are a total of three functions:
 
 1. gradio_predict: This function takes the input image array and gets the prediction result using the model, then the predicted mask is returned along with the classes predicted.
 
@@ -885,8 +885,8 @@ Now that the web app and FastAPI are ready we can mount the web app on the FastA
     @app.post('/predict-to-json')
     async def api_predict_json(file: UploadFile = File(...)):
         """
-        This API will take any food image file and return a json file of prediction result.
-        The prediction result will contains numpy.ndarray which are dumped into json format.
+        This API will take any food image file and return a JSON file of prediction results.
+        The prediction result will contain numpy.ndarray which is dumped into JSON format.
         To convert it back into the numpy.ndarray, use ```numpy.asarray(json.loads(...)) # Replace ... with the variable.  
         """
         # Validating only image files
@@ -1080,7 +1080,7 @@ There are many things that need to be done now that the first stage of deploymen
 
 1. **Data Pipeline:** Currently, I'm using the public dataset Food-101, which was introduced back in the year 2014, a lot of time has passed and so has the food data, data needs to be fresh and this can be achieved by scraping the data from online websites. 
 
-2. **Model Pipeline:** I have not yet used the full potential of the Yolo Model, using all the features and squeezing the model for getting the right and balanced mAP for all the classes is was needs to be achieved.
+2. **Model Pipeline:** I have not yet used the full potential of the Yolo Model, using all the features and squeezing the model to get the right and balanced mAP for all the classes that need to be achieved.
 
 3. **Deployment Pipeline:** Right now the model is running on HuggingFace which makes it difficult to interact with once it is been hosted. This can be improved by looking into cloud deployment.
 
@@ -1090,7 +1090,7 @@ There are many things that need to be done now that the first stage of deploymen
 
 ## **Final Words**
 
-I'm quite satisfied with how it has turned out, it's not the perfect version of what I'm imagining but it is close and it's just the start of the project. The code is working, and the structure and workflow are cleanly implemented, this as a base now has quite potential for improvement. Now the project will need less coding for some time and more emphasis on the data and model improvement. One day, I hope that the model can work on multiple different classes or food and thus fully close the feedback loop of continuous improvement.
+I'm quite satisfied with how it has turned out, it's not the perfect version of what I'm imagining but it is close and it's just the start of the project. The code is working, and the structure and workflow are cleanly implemented, this as a base now has quite potential for improvement. Now the project will need less coding for some time and more emphasis on the data and model improvement. One day, I hope that the model can work on multiple different classes or foods and thus fully close the feedback loop of continuous improvement.
 
 *Do test the [Food Geek](https://johnpinto-food-geek.hf.space) application and let me know your feedback. You can reach out to me by any means possible GitHub, Twitter, Email, etc.* 
 
